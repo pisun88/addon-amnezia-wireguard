@@ -1,4 +1,4 @@
-ARG BUILD_FROM=ghcr.io/hassio-addons/base:16.3.6
+ARG BUILD_FROM=ghcr.io/hassio-addons/base:17.1.3
 FROM ${BUILD_FROM}
 
 ENV AWG_TOOLS=v1.0.20241018
@@ -7,9 +7,7 @@ ENV AWG_GO=v0.2.12
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN \
-    apk update \
-    && apk upgrade --no-cache musl \
-    && apk add --no-cache --virtual .build-dependencies \
+    apk add --no-cache --virtual .build-dependencies \
         build-base \
         linux-headers \
         git \
