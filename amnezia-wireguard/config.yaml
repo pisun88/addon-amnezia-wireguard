@@ -1,6 +1,6 @@
 ---
 name: AmneziaWG
-version: dev
+version: 1.0
 slug: wireguard
 description: WireGuard-Go fork with protection against DPI systems.
 url: https://github.com/yury-sannikov/addon-amnezia-wireguard
