@@ -1,12 +1,17 @@
-FROM alpine:3.20
+ARG BUILD_FROM=ghcr.io/hassio-addons/base:17.1.3
+FROM ${BUILD_FROM}
 
 ENV AWG_TOOLS=v1.0.20241018
 ENV AWG_GO=v0.2.12
 
-SHELL ["/bin/sh", "-o", "pipefail", "-c"]
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN \
-    apk add --no-cache --virtual .build-dependencies \
+    echo "https://dl-cdn.alpinelinux.org/alpine/v3.20/main" > /etc/apk/repositories \
+    && echo "https://dl-cdn.alpinelinux.org/alpine/v3.20/community" >> /etc/apk/repositories \
+    && apk update \
+    && apk add --no-cache musl musl-dev \
+    && apk add --no-cache --virtual .build-dependencies \
         build-base \
         linux-headers \
         git \
@@ -15,8 +20,6 @@ RUN \
         iptables \
         libqrencode-tools \
         openresolv \
-        bash \
-        ca-certificates \
     && ln -sf /sbin/xtables-nft-multi /sbin/ip6tables \
     && ln -sf /sbin/xtables-nft-multi /sbin/iptables \
     && git clone --depth=1 --branch ${AWG_TOOLS} \
