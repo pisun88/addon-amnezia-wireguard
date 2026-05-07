@@ -1,17 +1,14 @@
-ARG BUILD_FROM=ghcr.io/hassio-addons/base:17.1.3
+# Используем официальный чистый билдер Home Assistant вместо устаревшего базового слоя
+ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base-alpine:3.20
 FROM ${BUILD_FROM}
 
 ENV AWG_TOOLS=v1.0.20241018
 ENV AWG_GO=v0.2.12
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+SHELL ["/bin/sh", "-o", "pipefail", "-c"]
 
 RUN \
-    echo "https://dl-cdn.alpinelinux.org/alpine/v3.20/main" > /etc/apk/repositories \
-    && echo "https://dl-cdn.alpinelinux.org/alpine/v3.20/community" >> /etc/apk/repositories \
-    && apk update \
-    && apk add --no-cache musl musl-dev \
-    && apk add --no-cache --virtual .build-dependencies \
+    apk add --no-cache --virtual .build-dependencies \
         build-base \
         linux-headers \
         git \
@@ -20,13 +17,15 @@ RUN \
         iptables \
         libqrencode-tools \
         openresolv \
+        bash \
+        ca-certificates \
     && ln -sf /sbin/xtables-nft-multi /sbin/ip6tables \
     && ln -sf /sbin/xtables-nft-multi /sbin/iptables \
     && git clone --depth=1 --branch ${AWG_TOOLS} \
-        https://github.com/amnezia-vpn/amneziawg-tools.git /tmp/wg-tools \
+        github.com /tmp/wg-tools \
     && cd /tmp/wg-tools/src && make && make install \
     && git clone --depth=1 --branch ${AWG_GO} \
-        https://github.com/amnezia-vpn/amneziawg-go.git /tmp/wireguard \
+        github.com /tmp/wireguard \
     && cd /tmp/wireguard && make && make install \
     && rm -f -r /tmp/* \
     && apk del --no-cache --purge .build-dependencies go
