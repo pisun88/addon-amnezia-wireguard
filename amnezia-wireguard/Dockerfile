@@ -7,7 +7,8 @@ ENV AWG_GO=v0.2.12
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN \
-    apk add --no-cache --virtual .build-dependencies \
+    apk upgrade --no-cache musl \
+    && apk add --no-cache --virtual .build-dependencies \
         build-base \
         linux-headers \
         git \
