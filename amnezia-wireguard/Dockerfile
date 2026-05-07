@@ -1,10 +1,9 @@
-ARG BUILD_FROM=ghcr.io/hassio-addons/base:17.1.3
-FROM ${BUILD_FROM}
+FROM alpine:3.20
 
 ENV AWG_TOOLS=v1.0.20241018
 ENV AWG_GO=v0.2.12
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+SHELL ["/bin/sh", "-o", "pipefail", "-c"]
 
 RUN \
     apk add --no-cache --virtual .build-dependencies \
@@ -16,6 +15,8 @@ RUN \
         iptables \
         libqrencode-tools \
         openresolv \
+        bash \
+        ca-certificates \
     && ln -sf /sbin/xtables-nft-multi /sbin/ip6tables \
     && ln -sf /sbin/xtables-nft-multi /sbin/iptables \
     && git clone --depth=1 --branch ${AWG_TOOLS} \
